@@ -1,3 +1,4 @@
+const cors = require('cors');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -16,6 +17,7 @@ require('./db');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());
