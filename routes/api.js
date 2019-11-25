@@ -2,9 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 
-const apiFanzineRouter = require('./api/fanzine');
+const apiFanzinesRouter = require('./api/fanzines');
+const apiArticulosRouter = require('./api/articulos');
 
-router.use('/fanzine', apiFanzineRouter);
+router.use('/fanzines', apiFanzinesRouter);
+router.use('/articulos', apiArticulosRouter);
 
 
 module.exports = router;
