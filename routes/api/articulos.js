@@ -18,7 +18,12 @@ router.get('/:id', async (req, res) => {
 router.post('/create', async (req, res) => {
     const result = await Articulo.insert(req.body);
     console.log(req.body);
-    res.json()
+    if (result['affectedRows'] === 1) {
+        const articulo = await Articulo.getById(result['insertId']);
+        res.json(articulo);
+    } else {
+        res.json({ error: 'Error en la inserción' });
+    }
 })
 
 
