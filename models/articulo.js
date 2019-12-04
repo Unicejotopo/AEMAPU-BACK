@@ -1,6 +1,6 @@
 const getAll = () => {
     return new Promise((resolve, reject) => {
-        db.query('select * from articulos', (err, rows) => {
+        db.query('select * from articulos order by fechaRegistro desc', (err, rows) => {
             if (err) reject(err);
             resolve(rows);
         })
@@ -18,9 +18,9 @@ const getByFanzineId = (pFanzineId) => {
     })
 }
 
-const insert = ({ titulo, texto, imagen, fanzineId }) => {
+const insert = ({ tipo, titulo, texto, imagen, fanzineId, fechaRegistro }) => {
     return new Promise((resolve, reject) => {
-        db.query('insert into articulos (titulo, texto, imagen, fanzineId, fechaRegistro) values (?, ?, ?, ?, ?)', [titulo, texto, imagen, fanzineId, new Date()], (err, result) => {
+        db.query('insert into articulos (tipo, titulo, texto, imagen, fanzineId, fechaRegistro) values (?, ?, ?, ?, ?, ?)', [tipo, titulo, texto, imagen, fanzineId, new Date()], (err, result) => {
             if (err) reject(err);
             resolve(result);
         })
@@ -42,9 +42,18 @@ const getById = (pArticuloId) => {
     })
 }
 
+const deleteById = (pArticuloId) => {
+    return new Promise((resolve, reject) => {
+        db.query('delete from articulos where id = ?', [pArticuloId], (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    });
+}
 module.exports = {
     getAll: getAll,
     getByFanzineId: getByFanzineId,
     insert: insert,
-    getById: getById
+    getById: getById,
+    deleteById: deleteById
 }

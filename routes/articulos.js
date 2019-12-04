@@ -13,6 +13,17 @@ router.get('/', (req, res) => {
         })
 });
 
+router.get('/delete/:id', (req, res) => {
+    Articulo.deleteById(req.params.id)
+        .then(result => {
+            res.redirect('/articulos');
+        }).catch(err => {
+            console.log(err);
+        })
+
+
+})
+
 
 
 

@@ -10,6 +10,8 @@ var usersRouter = require('./routes/users');
 var articulosRouter = require('./routes/articulos')
 var apiRouter = require('./routes/api');
 
+require('dotenv').config();
+
 var app = express();
 
 // Conecto con la BBDD

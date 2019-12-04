@@ -1,4 +1,30 @@
 extends ../layout
 
 block content
-    h2 Listado articulos
+    main.col-md-9.ml-sm-auto.col-lg-10.px-4(role="main")
+        div.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+            h1.h2 Listado articulos
+        div.table-responsive
+            table.table.table-striped.table-sm
+                thead
+                    th Id
+                    th Tipo
+                    th Título
+                    th Texto
+                    th Imagen
+                    th Fanzine
+                    th Fecha registro
+                    th Acciones
+                tbody
+                    each articulo in arrArticulos
+                        tr
+                            td= articulo.id
+                            td= articulo.tipo
+                            td= articulo.titulo
+                            td= articulo.texto
+                            td= articulo.imagen
+                            td= articulo.fanzineId
+                            td= articulo.fechaRegistro
+                            td.text-center
+                                a(href="/articulos/delete/" + articulo.id ) 
+                                    img(src="/images/icons/Trash.svg")
