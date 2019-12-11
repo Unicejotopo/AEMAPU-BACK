@@ -3,8 +3,15 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const jwt = require('jwt-simple');
+const middleware = require('../middlewares');
 
 let Usuario = require('../../models/usuario');
+let Articulo = require('../../models/articulo');
+
+router.get('/artistas', async (req, res) => {
+    const rows = await Usuario.getAll();
+    res.json(rows);
+});
 
 router.post('/registro', async (req, res) => {
     req.body.password = bcrypt.hashSync(req.body.password, 10);
@@ -30,11 +37,18 @@ router.post('/login', (req, res) => {
         })
 });
 
+router.get('/usuario', middleware.checkToken, async (req, res) => {
+    let row = await Usuario.getById(req.usuarioId);
+    let rows = await Articulo.getArticulosByUser(req.usuarioId);
+    row.articulos = rows;
+    res.json(row);
+});
+
 const createToken = (user) => {
     let payload = {
         userId: user.id,
         createdAt: moment().unix(),
-        expiresAt: moment().add(5, 'minutes').unix()
+        expiresAt: moment().add(60, 'minutes').unix()
     }
     return jwt.encode(payload, process.env.TOKEN_KEY);
 }

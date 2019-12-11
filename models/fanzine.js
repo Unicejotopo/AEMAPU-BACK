@@ -7,10 +7,21 @@ const getAll = () => {
     });
 };
 
+const getByFanzineId = (pFanzineId) => {
+    return new Promise((resolve, reject) => {
+        db.query('select * from articulos where fanzineId = ? order by fechaRegistro desc', [pFanzineId],
+            (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            });
+    })
+}
+
 
 
 module.exports = {
 
-    getAll: getAll
+    getAll: getAll,
+    getByFanzineId: getByFanzineId
 
 };

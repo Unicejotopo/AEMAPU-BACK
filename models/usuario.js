@@ -1,10 +1,19 @@
 const getAll = () => {
     return new Promise((resolve, reject) => {
-        db.query('select * from usuarios', (err, rows) => {
+        db.query('select * from usuarios order by fechaRegistro desc', (err, rows) => {
             if (err) reject(err);
             resolve(rows);
         })
     });
+}
+
+const getById = (pId) => {
+    return new Promise((resolve, reject) => {
+        db.query('select * from usuarios where id = ?', [pId], (err, rows) => {
+            if (err) reject(err);
+            resolve(rows[0]);
+        })
+    })
 }
 
 const getByEmail = (pEmail) => {
@@ -16,10 +25,9 @@ const getByEmail = (pEmail) => {
     });
 }
 
-
-const insert = ({ nombre, apellidos, usuario, password, email, fechaRegistro }) => {
+const insert = ({ nombre, apellidos, password, email, descripcion }) => {
     return new Promise((resolve, reject) => {
-        db.query('insert into usuarios (nombre, apellidos, usuario, password, email, fechaRegistro) values (?, ?, ?, ?, ?, ?)', [nombre, apellidos, usuario, password, email, new Date()], (err, result) => {
+        db.query('insert into usuarios (nombre, apellidos, password, email, descripcion, fechaRegistro) values (?, ?, ?, ?, ?, ?)', [nombre, apellidos, password, email, descripcion, new Date()], (err, result) => {
             if (err) reject(err);
             resolve(result);
         })
@@ -30,5 +38,6 @@ const insert = ({ nombre, apellidos, usuario, password, email, fechaRegistro }) 
 module.exports = {
     getAll: getAll,
     getByEmail: getByEmail,
-    insert: insert
+    insert: insert,
+    getById: getById
 }
