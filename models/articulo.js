@@ -8,10 +8,10 @@ const getAll = () => {
     });
 }
 
-const insert = ({ tipo, titulo, texto, imagen, fanzineId }, pUsuarioId) => {
+const insert = ({ tipo, titulo, texto, imagen }, pUsuarioId) => {
     let textoGuardar = texto.replace(/\n/g, '<br>');
     return new Promise((resolve, reject) => {
-        db.query('insert into articulos (tipo, titulo, texto, imagen, fanzineId, fechaRegistro, fk_usuario) values (?, ?, ?, ?, ?, ?,?)', [tipo, titulo, textoGuardar, imagen, fanzineId, new Date(), pUsuarioId], (err, result) => {
+        db.query('insert into articulos (tipo, titulo, texto, imagen, fanzineId, fechaRegistro, fk_usuario) values (?, ?, ?, ?, (select id from fanzines where activo = 1), ?, ?)', [tipo, titulo, textoGuardar, imagen, new Date(), pUsuarioId], (err, result) => {
             if (err) reject(err);
             resolve(result);
         })
@@ -42,7 +42,7 @@ const getNumeroArticulos = (pFazineId) => {
 
 const getById = (pArticuloId) => {
     return new Promise((resolve, reject) => {
-        db.query('select * from articulos where id = ?', [pArticuloId],
+        db.query('select art.*, usu.nombre, usu.apellidos, usu.email from articulos art, usuarios usu where art.fk_usuario = usu.id and art.id = ?', [pArticuloId],
             (err, rows) => {
                 if (err) reject(err);
                 if (rows.length == 1) {

@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:id', middleware.checkToken, async (req, res) => {
+router.get('/:id', async (req, res) => {
     const rows = await Articulo.getById(req.params.id, req.usuarioId);
     let row = await Usuario.getById(req.usuarioId);
     rows.usuario = row;
@@ -22,7 +22,7 @@ router.get('/:id', middleware.checkToken, async (req, res) => {
 router.get('/numero/:id', async (req, res) => {
     const row = await Articulo.getNumeroArticulos(req.params.id);
     res.json(row);
-    console.log(row);
+    // console.log(row);
 });
 
 router.get('/usuario/:id', async (req, res) => {
@@ -46,7 +46,7 @@ router.post('/create', middleware.checkToken, async (req, res) => {
 // DELETE http://localhost:3000/api/articulos/delete
 router.delete('/delete/:id', async (req, res) => {
     const result = await Articulo.deleteById(req.params.id);
-    console.log(req.params.id)
+    // console.log(req.params.id)
     if (result['affectedRows'] === 1) {
         res.json({ exito: 'Articulo borrado con éxito' });
     } else {

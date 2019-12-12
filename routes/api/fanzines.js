@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const rows = await Fanzine.getByFanzineId(req.params.id);
     res.json(rows);
-    console.log(rows);
+    // console.log(rows);
 })
 
 
