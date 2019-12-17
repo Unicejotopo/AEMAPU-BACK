@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+    main.col-md-9.ml-sm-auto.col-lg-10.px-4(role="main")
+        div.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+            h1.h2 Listado usuarios
+        div.table-responsive
+            table.table.table-striped.table-sm
+                thead
+                    th Id
+                    th Nombre
+                    th Apellidos
+                    th Email
+                    th Descripción
+                    th Fecha registro
+                    th Acciones
+                tbody
+                    each usuario in arrUsuarios
+                        tr
+                            td= usuario.id
+                            td= usuario.nombre
+                            td= usuario.apellidos
+                            td= usuario.email
+                            td= usuario.descripcion
+                            td= usuario.fechaRegistro
+                            td.text-center
+                                a(href="/usuario/delete/" + usuario.id ) 
+                                    img(src="/images/icons/Trash.svg")

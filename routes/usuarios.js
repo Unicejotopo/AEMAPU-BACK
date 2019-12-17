@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-let Articulo = require('../models/articulo');
+let Usuario = require('../models/usuario');
 
 router.get('/', (req, res) => {
-    Articulo.getAll()
+    Usuario.getAll()
         .then(rows => {
-            res.render('articulos/list', { arrArticulos: rows });
+            res.render('usuarios/list', { arrUsuarios: rows });
             //console.log('leo', rows);
 
         }).catch(err => {
@@ -15,9 +15,10 @@ router.get('/', (req, res) => {
 });
 
 router.get('/delete/:id', (req, res) => {
-    Articulo.deleteByIdAdmin(req.params.id)
+    Usuario.deleteByIdAdmin(req.params.id)
         .then(result => {
-            res.redirect('/articulos');
+            console.log(req.params.id);
+            res.redirect('/usuarios');
         }).catch(err => {
             console.log(err);
         })

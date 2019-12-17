@@ -35,9 +35,19 @@ const insert = ({ nombre, apellidos, password, email, descripcion }) => {
 
 }
 
+const deleteByIdAdmin = (pUsuarioId) => {
+    return new Promise((resolve, reject) => {
+        db.query('delete from usuarios WHERE id = ?', [pUsuarioId], (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    });
+}
+
 module.exports = {
     getAll: getAll,
     getByEmail: getByEmail,
     insert: insert,
-    getById: getById
+    getById: getById,
+    deleteByIdAdmin: deleteByIdAdmin
 }

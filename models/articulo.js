@@ -20,7 +20,7 @@ const insert = ({ tipo, titulo, texto, imagen }, pUsuarioId) => {
 
 const getArticulosByUser = (pUsuarioId) => {
     return new Promise((resolve, reject) => {
-        db.query('select * from articulos where fk_usuario = ?', [pUsuarioId], (err, rows) => {
+        db.query('select * from articulos where fk_usuario = ? order by fechaRegistro desc', [pUsuarioId], (err, rows) => {
             if (err) reject(err);
             resolve(rows);
         })
@@ -29,11 +29,11 @@ const getArticulosByUser = (pUsuarioId) => {
 
 }
 
-const getNumeroArticulos = (pFazineId) => {
+const getNumeroArticulos = (pUsuarioId) => {
     return new Promise((resolve, reject) => {
-        db.query('select count(*) from articulos where fanzineId = ?', [pFazineId], (err, row) => {
+        db.query('select count(*) as numArticulos from articulos where fanzineId = (select id from fanzines where activo = 1) and fk_usuario = ?', [pUsuarioId], (err, row) => {
             if (err) reject(err);
-            resolve(row);
+            resolve(row[0]);
         })
     })
 
@@ -57,17 +57,38 @@ const getById = (pArticuloId) => {
 
 const deleteById = (pArticuloId) => {
     return new Promise((resolve, reject) => {
-        db.query('delete from articulos where id = ?', [pArticuloId], (err, result) => {
+        db.query('delete from articulos WHERE fanzineId = (select id from fanzines where activo = 1)  AND articulos.id = ?', [pArticuloId], (err, result) => {
             if (err) reject(err);
             resolve(result);
         })
     });
 }
+const deleteByIdAdmin = (pArticuloId) => {
+    return new Promise((resolve, reject) => {
+        db.query('delete from articulos WHERE articulos.id = ?', [pArticuloId], (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    });
+}
+
+const getArticulosByTipo = (pFanzineId, pTipo) => {
+    // console.log('Tipo:', pTipo);
+    return new Promise((resolve, reject) => {
+        db.query('select * from articulos where fanzineId = ? and tipo = ?', [pFanzineId, pTipo,], (err, rows) => {
+            if (err) reject(err);
+            resolve(rows);
+        })
+    })
+}
+
 module.exports = {
     getAll: getAll,
     insert: insert,
     getById: getById,
     deleteById: deleteById,
+    deleteByIdAdmin: deleteByIdAdmin,
     getArticulosByUser: getArticulosByUser,
-    getNumeroArticulos: getNumeroArticulos
+    getNumeroArticulos: getNumeroArticulos,
+    getArticulosByTipo: getArticulosByTipo
 }

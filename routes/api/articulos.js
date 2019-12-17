@@ -31,16 +31,36 @@ router.get('/usuario/:id', async (req, res) => {
     res.json(rows);
 });
 
+router.get('/:fanzineId/:tipo', async (req, res) => {
+    // console.log(typeof (req.params.tipo));
+    const rows = await Articulo.getArticulosByTipo(req.params.fanzineId, req.params.tipo);
+    res.json(rows);
+    // console.log(req.params.fanzineId);
+})
+
 router.post('/create', middleware.checkToken, async (req, res) => {
-    console.log(req.usuarioId);
-    const result = await Articulo.insert(req.body, req.usuarioId);
-    console.log(req.body);
-    if (result['affectedRows'] === 1) {
-        const articulo = await Articulo.getById(result['insertId']);
-        res.json(articulo);
+    // console.log(req.usuarioId);
+    let row = await Articulo.getNumeroArticulos(req.usuarioId);
+    // let fanzines = await Fanzine.getAll();
+    // console.log(fanzines[0].activo);
+    console.log('Numero articulos', row.numArticulos);
+    // console.log('total articulos', num.numArtiTotal);
+    if (row.numArticulos < 1) {
+        const result = await Articulo.insert(req.body, req.usuarioId);
+        // console.log(req.body);
+        if (result['affectedRows'] === 1) {
+            const articulo = await Articulo.getById(result['insertId']);
+            res.json(articulo);
+        } else {
+            res.json({ error: 'Error en la inserción' });
+        }
+
     } else {
-        res.json({ error: 'Error en la inserción' });
+        res.json({ error: 'Solo puedes insertar un artículo por cada fanzine' });
     }
+
+
+
 });
 
 // DELETE http://localhost:3000/api/articulos/delete
@@ -50,7 +70,7 @@ router.delete('/delete/:id', async (req, res) => {
     if (result['affectedRows'] === 1) {
         res.json({ exito: 'Articulo borrado con éxito' });
     } else {
-        res.json({ error: 'No se ha borrado el articulo' });
+        res.json({ error: 'No puedes eliminar un artículo de un fanzine cerrado' });
     }
 });
 
