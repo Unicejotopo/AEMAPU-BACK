@@ -2,6 +2,8 @@ const jwt = require('jwt-simple');
 const moment = require('moment');
 
 const checkToken = (req, res, next) => {
+
+    console.log(req.headers)
     // Compruebo si la cabecera viene incluida en la petición
     if (!req.headers['user-token']) {
         return res.json({ error: 'Tienes que incluir la cabecera user-token' })

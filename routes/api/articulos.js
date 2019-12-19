@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const middleware = require('../middlewares');
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+const fs = require('fs');
 
 let Usuario = require('../../models/usuario');
 let Articulo = require('../../models/articulo');
@@ -38,20 +41,32 @@ router.get('/:fanzineId/:tipo', async (req, res) => {
     // console.log(req.params.fanzineId);
 })
 
-router.post('/create', middleware.checkToken, async (req, res) => {
-    // console.log(req.usuarioId);
+router.post('/create', middleware.checkToken, multipartMiddleware, async (req, res) => {
+    console.log(req.body);
+    console.log(req.files);
     let row = await Articulo.getNumeroArticulos(req.usuarioId);
+    let extension = req.files.imagen.type.split('/')[1];
+    let nombre = Date.now();
+    req.body.imagen = nombre + '.' + extension;
     // let fanzines = await Fanzine.getAll();
     // console.log(fanzines[0].activo);
-    console.log('Numero articulos', row.numArticulos);
+    // console.log('Numero articulos', row.numArticulos);
     // console.log('total articulos', num.numArtiTotal);
+    console.log('PASO PREVIO')
+    console.log(row)
     if (row.numArticulos < 1) {
+
         const result = await Articulo.insert(req.body, req.usuarioId);
-        // console.log(req.body);
+
         if (result['affectedRows'] === 1) {
+            console.log('PASO 1');
             const articulo = await Articulo.getById(result['insertId']);
+            let content = fs.readFileSync(req.files.imagen.path);
+            fs.writeFileSync('./public/images/' + nombre + '.' + extension, content);
             res.json(articulo);
+
         } else {
+            console.log('PASO 2');
             res.json({ error: 'Error en la inserción' });
         }
 

@@ -9,9 +9,11 @@ const getAll = () => {
 }
 
 const insert = ({ tipo, titulo, texto, imagen }, pUsuarioId) => {
-    let textoGuardar = texto.replace(/\n/g, '<br>');
+    // console.log('leo:', texto);
+    // let textoGuardar = texto.replace(/\n/g, '<br>');
+    console.log(tipo, titulo, texto, imagen);
     return new Promise((resolve, reject) => {
-        db.query('insert into articulos (tipo, titulo, texto, imagen, fanzineId, fechaRegistro, fk_usuario) values (?, ?, ?, ?, (select id from fanzines where activo = 1), ?, ?)', [tipo, titulo, textoGuardar, imagen, new Date(), pUsuarioId], (err, result) => {
+        db.query('insert into articulos (tipo, titulo, texto, imagen, fanzineId, fechaRegistro, fk_usuario) values (?, ?, ?, ?, (select id from fanzines where activo = 1), ?, ?)', [tipo, titulo, texto, imagen, new Date(), pUsuarioId], (err, result) => {
             if (err) reject(err);
             resolve(result);
         })

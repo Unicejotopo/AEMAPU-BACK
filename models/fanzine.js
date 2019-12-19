@@ -29,7 +29,7 @@ const numeroArticulos = () => {
 
 const fanzineActivo = () => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * from fanzines where activo = 1', (err, row) => {
+        db.query('select * from fanzines where activo = 1', (err, row) => {
             if (err) reject(err);
             resolve(row[0]);
         })
